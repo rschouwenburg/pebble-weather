@@ -38,7 +38,7 @@ static const WeatherIcons WEATHER_DAY_ICONS_CODE_DEF[] = {
   { 511, "\U0000f006"	}, // freezing rain	 13d
   { 520, "\U0000f009"	}, // light intensity shower rain	 09d
   { 521, "\U0000f009"	}, // shower rain	 09d
-  { 522, "\U0000f009"	}, // heavy int ensity shower rain	 09d
+  { 522, "\U0000f009"	}, // heavy intensity shower rain	 09d
   { 531, "\U0000f00e"	}, // ragged shower rain
     
   { 600, "\U0000f00a"	}, // light snow	[[file:13d.png]]

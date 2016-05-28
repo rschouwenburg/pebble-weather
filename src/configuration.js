@@ -115,7 +115,7 @@ function fetchHourlyWeather(city_id, timezone, latitude, longitude) {
             
             var utcoffset = 0;
             if ( city_id > 0 ) {
-              var utcoffset = moment.tz(timestamp, timezone).utcOffset() * 60;
+              var utcoffset = 0 - moment.tz.zone(timezone).offset(timestamp * 1000) * 60;
               console.log("fetchHourlyWeather(): utcoffset = " + utcoffset);
             }
             message['UTC_OFFSET_KEY'] = utcoffset;
@@ -197,7 +197,7 @@ function fetchDailyWeather(city_id, timezone, latitude, longitude) {
             
             var utcoffset = 0;
             if ( city_id > 0 ) {
-              var utcoffset = moment.tz(timestamp, timezone).utcOffset() * 60;
+              var utcoffset = 0 - moment.tz.zone(timezone).offset(timestamp * 1000) * 60;
               console.log("fetchDailyWeather(): utcoffset = " + utcoffset);
             }
             message['UTC_OFFSET_KEY'] = utcoffset;
