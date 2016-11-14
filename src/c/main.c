@@ -821,13 +821,13 @@ static void current_weather_update_proc(Layer *layer, GContext *ctx) {
   
   time_t now = time(NULL);
   
- // snprintf(current_weather.city, sizeof(current_weather.city), "Hastings on the Hudson");
+  //snprintf(current_weather[item].city, sizeof(current_weather[item].city), "Hastings on the Hudson");
 
   // 2x LONG
   //if ( item == 0 ) {
-    //snprintf(current_weather[item].city, sizeof(current_weather[item].city), "Magallanes y la Antártica Chilena");
-      //snprintf(current_weather[item].city, sizeof(current_weather[item].city), "\U000027A4 Magallanes");
-    //snprintf(current_weather[item].description, sizeof(current_weather[item].description), "light intensity drizzle");
+  //  snprintf(current_weather[item].city, sizeof(current_weather[item].city), "Magallanes y la Antártica Chilena");
+  //  snprintf(current_weather[item].city, sizeof(current_weather[item].city), "\U000027A4 Magallanes");
+  //  snprintf(current_weather[item].description, sizeof(current_weather[item].description), "light intensity drizzle");
   //}
   
   time_t timestamp;
@@ -1115,8 +1115,8 @@ void scroll_down()
 {
   GPoint pos = scroll_layer_get_content_offset(current_weather_scrolllayer);
   
-  if ( pos.y > -180 ) {
-    scroll_layer_set_content_offset(current_weather_scrolllayer, GPoint(0, -180), true);
+  if ( pos.y > -PBL_DISPLAY_HEIGHT  ) {
+    scroll_layer_set_content_offset(current_weather_scrolllayer, GPoint(0, -PBL_DISPLAY_HEIGHT), true);
   } else {
     scroll_layer_set_content_offset(current_weather_scrolllayer, GPoint(0, pos.y - 42), true);
   }
@@ -1132,7 +1132,7 @@ void scroll_down_repeat() {
 void scroll_up() {
   GPoint pos = scroll_layer_get_content_offset(current_weather_scrolllayer);
   
-  if ( pos.y >= -180 ) {
+  if ( pos.y >= -PBL_DISPLAY_HEIGHT ) {
     scroll_layer_set_content_offset(current_weather_scrolllayer, GPoint(0, 0), true);
   } else {
     scroll_layer_set_content_offset(current_weather_scrolllayer, GPoint(0, pos.y + 42), true);
@@ -1826,7 +1826,7 @@ static void main_window_load(Window *window) {
                                         &down_config);
 
 #if defined(PBL_RECT)
-  city_textlayer = text_layer_create(GRect(0, 25, bounds.size.w, 40));
+  city_textlayer = text_layer_create(GRect(0, bounds.size.h / 2 - 59, bounds.size.w, 40));
 #else
   city_textlayer = text_layer_create(GRect(0, 30, bounds.size.w, 40));
 #endif
