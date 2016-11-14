@@ -10,19 +10,6 @@
 #define BGCOLOR GColorBlack
 #define FGCOLOR GColorWhite
 
-#define KEY_WEATHER_TYPE 0
-#define WEATHER_CODE_KEY 1
-#define WEATHER_TEMPERATURE_KEY 2
-#define WEATHER_SUNRISE_KEY 3
-#define WEATHER_SUNSET_KEY 4
-#define WEATHER_CITY_KEY 5
-#define WEATHER_TIMESTAMP_KEY 6
-#define KEY_READY 7
-#define WEATHER_DESCRIPTION 8
-#define WEATHER_CITYCODE_KEY 9
-#define WEATHER_CURRENT_LOCATION_KEY 10
-#define UTC_OFFSET_KEY 11
-
 #define SETTINGS_KEY 20
 
 #define CITIES_KEY 30
@@ -614,7 +601,7 @@ static bool fetchCurrentWeather(void) {
   }
 
   int value = 1;
-  dict_write_int(out, KEY_WEATHER_TYPE, &value, sizeof(int), true);
+  dict_write_int(out, MESSAGE_KEY_WEATHER_TYPE, &value, sizeof(int), true);
   for(int i=0; i<MAX_CITIES; i++) {
     if(strlen(cities[i].name) > 0) {
       if ( i > 0 && (time_t) time(NULL) < current_weather[i].timestamp + WEATHER_INTERVAL_SECS ) {
@@ -635,7 +622,7 @@ static bool fetchCurrentWeather(void) {
   }
   
   if ( weather_to_fetch == true ) {
-    dict_write_int(out, KEY_WEATHER_TYPE, &value, sizeof(int), true);
+    dict_write_int(out, MESSAGE_KEY_WEATHER_TYPE, &value, sizeof(int), true);
     start_spinner();
   } else {
     APP_LOG(APP_LOG_LEVEL_INFO, "fetchCurrentWeather(): no weather to fetch");
@@ -673,7 +660,7 @@ static bool fetchHourlyWeather(void) {
   }
       
   if ( weather_to_fetch == true ) {
-    dict_write_int(out, KEY_WEATHER_TYPE, &value, sizeof(int), true);
+    dict_write_int(out, MESSAGE_KEY_WEATHER_TYPE, &value, sizeof(int), true);
     start_spinner();
   } else {
     APP_LOG(APP_LOG_LEVEL_INFO, "fetchHourlyWeather(): no weather to fetch");
@@ -717,7 +704,7 @@ static bool fetchDailyWeather(void) {
   }
   
   if ( weather_to_fetch == true ) {
-    dict_write_int(out, KEY_WEATHER_TYPE, &value, sizeof(int), true);
+    dict_write_int(out, MESSAGE_KEY_WEATHER_TYPE, &value, sizeof(int), true);
     start_spinner();
   } else {
     APP_LOG(APP_LOG_LEVEL_INFO, "fetchDailyWeather(): no weather to fetch");
@@ -1508,7 +1495,7 @@ static bool fetchCities(char *city) {
   }
 
   int value = 4;
-  dict_write_int(out, KEY_WEATHER_TYPE, &value, sizeof(int), true);
+  dict_write_int(out, MESSAGE_KEY_WEATHER_TYPE, &value, sizeof(int), true);
   dict_write_cstring(out, 100, city);
 
   result = app_message_outbox_send();
@@ -1957,27 +1944,27 @@ static void main_window_unload(Window *window) {
 
 static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 
-  Tuple *ready_key = dict_find(iter, KEY_READY);
+  Tuple *ready_key = dict_find(iter, MESSAGE_KEY_READY);
   if (ready_key ) {
     ready = 1;
     APP_LOG(APP_LOG_LEVEL_DEBUG, "inbox_received_handler(): JS reports ready (%u)", (int) ready_key->value->int32);
     return;
   }
   
-  Tuple *weather_type = dict_find(iter, KEY_WEATHER_TYPE);
+  Tuple *weather_type = dict_find(iter, MESSAGE_KEY_WEATHER_TYPE);
   if ( weather_type->value->int8 == 1 )
   {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "inbox_received_handler(): JS reports current weather");
 
-    Tuple *code_key = dict_find(iter, WEATHER_CODE_KEY);
-    Tuple *temperature_key = dict_find(iter, WEATHER_TEMPERATURE_KEY);
-    Tuple *sunrise_key = dict_find(iter, WEATHER_SUNRISE_KEY);
-    Tuple *sunset_key = dict_find(iter, WEATHER_SUNSET_KEY);
-    Tuple *citycode_key = dict_find(iter, WEATHER_CITYCODE_KEY);    
-    Tuple *city_key = dict_find(iter, WEATHER_CITY_KEY);
-    Tuple *description_key = dict_find(iter, WEATHER_DESCRIPTION);
-    Tuple *timestamp_key = dict_find(iter, WEATHER_TIMESTAMP_KEY);
-    Tuple *current_location_key = dict_find(iter, WEATHER_CURRENT_LOCATION_KEY);
+    Tuple *code_key = dict_find(iter, MESSAGE_KEY_WEATHER_CODE);
+    Tuple *temperature_key = dict_find(iter, MESSAGE_KEY_WEATHER_TEMPERATURE);
+    Tuple *sunrise_key = dict_find(iter, MESSAGE_KEY_WEATHER_SUNRISE);
+    Tuple *sunset_key = dict_find(iter, MESSAGE_KEY_WEATHER_SUNSET);
+    Tuple *citycode_key = dict_find(iter, MESSAGE_KEY_WEATHER_CITYCODE);    
+    Tuple *city_key = dict_find(iter, MESSAGE_KEY_WEATHER_CITY);
+    Tuple *description_key = dict_find(iter, MESSAGE_KEY_WEATHER_DESCRIPTION);
+    Tuple *timestamp_key = dict_find(iter, MESSAGE_KEY_WEATHER_TIMESTAMP);
+    Tuple *current_location_key = dict_find(iter, MESSAGE_KEY_WEATHER_CURRENT_LOCATION);
     
     if ( code_key->value->int32 > 0 ) {
       
@@ -2020,10 +2007,10 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   if ( weather_type->value->int8 == 2 ) {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "inbox_received_handler(): JS reports hourly weather");
     
-    Tuple *city_id_key = dict_find(iter, WEATHER_CITY_KEY);
-    Tuple *timestamp_key = dict_find(iter, WEATHER_TIMESTAMP_KEY);
-    Tuple *utcoffset_key = dict_find(iter, UTC_OFFSET_KEY);
-    Tuple *current_location_key = dict_find(iter, WEATHER_CURRENT_LOCATION_KEY);
+    Tuple *city_id_key = dict_find(iter, MESSAGE_KEY_WEATHER_CITY);
+    Tuple *timestamp_key = dict_find(iter, MESSAGE_KEY_WEATHER_TIMESTAMP);
+    Tuple *utcoffset_key = dict_find(iter, MESSAGE_KEY_UTC_OFFSET);
+    Tuple *current_location_key = dict_find(iter, MESSAGE_KEY_WEATHER_CURRENT_LOCATION);
 
     if ( city_id_key->value->uint32 > 0 ) {
       
@@ -2078,10 +2065,10 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   if ( weather_type->value->int8 == 3 ) {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "inbox_received_handler(): JS reports daily weather");
    
-    Tuple *city_id_key = dict_find(iter, WEATHER_CITY_KEY);
-    Tuple *timestamp_key = dict_find(iter, WEATHER_TIMESTAMP_KEY);
-    Tuple *utcoffset_key = dict_find(iter, UTC_OFFSET_KEY);
-    Tuple *current_location_key = dict_find(iter, WEATHER_CURRENT_LOCATION_KEY);
+    Tuple *city_id_key = dict_find(iter, MESSAGE_KEY_WEATHER_CITY);
+    Tuple *timestamp_key = dict_find(iter, MESSAGE_KEY_WEATHER_TIMESTAMP);
+    Tuple *utcoffset_key = dict_find(iter, MESSAGE_KEY_UTC_OFFSET);
+    Tuple *current_location_key = dict_find(iter, MESSAGE_KEY_WEATHER_CURRENT_LOCATION);
    
     if ( city_id_key->value->uint32 > 0 ) {
       

@@ -13,20 +13,20 @@
         ],
         "displayName": "Weather",
         "enableMultiJS": true,
-        "messageKeys": {
-            "KEY_READY": 7,
-            "KEY_WEATHER_TYPE": 0,
-            "UTC_OFFSET_KEY": 11,
-            "WEATHER_CITYCODE_KEY": 9,
-            "WEATHER_CITY_KEY": 5,
-            "WEATHER_CODE_KEY": 1,
-            "WEATHER_CURRENT_LOCATION_KEY": 10,
-            "WEATHER_DESCRIPTION": 8,
-            "WEATHER_SUNRISE_KEY": 3,
-            "WEATHER_SUNSET_KEY": 4,
-            "WEATHER_TEMPERATURE_KEY": 2,
-            "WEATHER_TIMESTAMP_KEY": 6
-        },
+        "messageKeys": [
+            "WEATHER_TYPE",
+            "WEATHER_CODE",
+            "WEATHER_TEMPERATURE",
+            "WEATHER_SUNRISE",
+            "WEATHER_SUNSET",
+            "WEATHER_CITY",
+            "WEATHER_TIMESTAMP",
+            "READY",
+            "WEATHER_DESCRIPTION",
+            "WEATHER_CITYCODE",
+            "WEATHER_CURRENT_LOCATION",
+            "UTC_OFFSET"
+        ],
         "projectType": "native",
         "resources": {
             "media": [

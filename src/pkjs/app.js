@@ -41,16 +41,16 @@ function fetchCurrentWeather(city_id, latitude, longitude) {
           var timestamp = Math.round(d.getTime() / 1000);
           
           MessageQueue.sendAppMessage({
-            'KEY_WEATHER_TYPE': 1,
-            'WEATHER_CODE_KEY': code,
-            'WEATHER_TEMPERATURE_KEY': temperature_F,
-            'WEATHER_SUNRISE_KEY': sunrise,
-            'WEATHER_SUNSET_KEY': sunset,
-            'WEATHER_CITYCODE_KEY': city_code,
-            'WEATHER_CITY_KEY': city,
-            'WEATHER_TIMESTAMP_KEY': timestamp,
+            'WEATHER_TYPE': 1,
+            'WEATHER_CODE': code,
+            'WEATHER_TEMPERATURE': temperature_F,
+            'WEATHER_SUNRISE': sunrise,
+            'WEATHER_SUNSET': sunset,
+            'WEATHER_CITYCODE': city_code,
+            'WEATHER_CITY': city,
+            'WEATHER_TIMESTAMP': timestamp,
             'WEATHER_DESCRIPTION': description,
-            'WEATHER_CURRENT_LOCATION_KEY': current_location
+            'WEATHER_CURRENT_LOCATION': current_location
           });
         }                                                                                                                                                                                        
       } else {
@@ -88,49 +88,34 @@ function fetchHourlyWeather(city_id, timezone, latitude, longitude) {
         if ( typeof response.city != 'undefined' ) {
           if ( typeof response.city.id != 'undefined' ) {
             var message = {};
-            message['KEY_WEATHER_TYPE'] = 2;
-            message['WEATHER_CITY_KEY'] = response.city.id;
-            message['WEATHER_CURRENT_LOCATION_KEY'] = 0;
+            message['WEATHER_TYPE'] = 2;
+            message['WEATHER_CITY'] = response.city.id;
+            message['WEATHER_CURRENT_LOCATION'] = 0;
             if ( city_id == 0 ) {
-              message['WEATHER_CURRENT_LOCATION_KEY'] = 1;
+              message['WEATHER_CURRENT_LOCATION'] = 1;
             }
                     
             var d = new Date();
             var timestamp = Math.round(d.getTime() / 1000);
-            message['WEATHER_TIMESTAMP_KEY'] = timestamp;
+            message['WEATHER_TIMESTAMP'] = timestamp;
             
             var utcoffset = 0;
             if ( city_id > 0 ) {
               var utcoffset = 0 - moment.tz.zone(timezone).offset(timestamp * 1000) * 60;
               console.log("fetchHourlyWeather(): utcoffset = " + utcoffset);
             }
-            message['UTC_OFFSET_KEY'] = utcoffset;
+            message['UTC_OFFSET'] = utcoffset;
             
             var cnt = 100;
             response.list.forEach(function (item) {
-              
-              //if ( cnt == 100 && item.dt - timestamp > 7200 ) {
-              //  message[cnt.toString()] = item.dt - 7200;
-              //  cnt++;
-              //  message[cnt.toString()] = Math.round(1.8 * (item.main.temp - 273.15) + 32);
-              //  cnt++;
-              //  message[cnt.toString()] = item.weather[0].id;
-              //  cnt++;            
-              //}
-              
-              //var add_time = -3600;
-              
-              // explore 3 hour windows to per hour
-              //for(var i=0; i<3; i++) {
+
                 message[cnt.toString()] = item.dt;// + add_time;
                 cnt++;
                 message[cnt.toString()] = Math.round(1.8 * (item.main.temp - 273.15) + 32);
                 cnt++;
                 message[cnt.toString()] = item.weather[0].id;
                 cnt++;
-                
-              //  add_time = add_time + 3600;
-              //}
+
             });
             
             console.log(JSON.stringify(message));
@@ -170,23 +155,23 @@ function fetchDailyWeather(city_id, timezone, latitude, longitude) {
         if ( typeof response.city != 'undefined' ) {
           if ( typeof response.city.id != 'undefined' ) {
             var message = {};
-            message['KEY_WEATHER_TYPE'] = 3;
-            message['WEATHER_CITY_KEY'] = response.city.id;
-            message['WEATHER_CURRENT_LOCATION_KEY'] = 0;
+            message['WEATHER_TYPE'] = 3;
+            message['WEATHER_CITY'] = response.city.id;
+            message['WEATHER_CURRENT_LOCATION'] = 0;
             if ( city_id == 0 ) {
-              message['WEATHER_CURRENT_LOCATION_KEY'] = 1;
+              message['WEATHER_CURRENT_LOCATION'] = 1;
             }
                     
             var d = new Date();
             var timestamp = Math.round(d.getTime() / 1000);
-            message['WEATHER_TIMESTAMP_KEY'] = timestamp;
+            message['WEATHER_TIMESTAMP'] = timestamp;
             
             var utcoffset = 0;
             if ( city_id > 0 ) {
               var utcoffset = 0 - moment.tz.zone(timezone).offset(timestamp * 1000) * 60;
               console.log("fetchDailyWeather(): utcoffset = " + utcoffset);
             }
-            message['UTC_OFFSET_KEY'] = utcoffset;
+            message['UTC_OFFSET'] = utcoffset;
             
             var cnt = 100;
             response.list.forEach(function (item) {
@@ -232,7 +217,7 @@ function fetchCities(name)
         var response = JSON.parse(req.responseText);
         
         var message = {};
-        message['KEY_WEATHER_TYPE'] = 4;
+        message['WEATHER_TYPE'] = 4;
         
         var cnt = 100;
         response.geonames.forEach(function (item) {
@@ -335,7 +320,7 @@ Pebble.addEventListener('appmessage', function (e) {
   
   console.log('Received message: ' + JSON.stringify(e.payload));
   
-  switch(e.payload['KEY_WEATHER_TYPE']) {
+  switch(e.payload['WEATHER_TYPE']) {
       
     case 1:
       for(var i=100; i<111; i++) {
@@ -401,7 +386,7 @@ Pebble.addEventListener('appmessage', function (e) {
 
 function reportReady() {
   MessageQueue.sendAppMessage({
-     'KEY_READY': 1}, function() {}, reportReady);
+     'READY': 1}, function() {}, reportReady);
 }
 
 Pebble.addEventListener('ready', function (e) {
