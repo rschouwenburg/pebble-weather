@@ -1,8 +1,14 @@
 #include <pebble.h>
 #include "rain-or-shine.h"
 
-#undef APP_LOG
-#define APP_LOG(...)
+//#define SCREENSHOT 1
+
+//#undef APP_LOG
+//#define APP_LOG(...)
+
+//#define BGCOLOR GColorCobaltBlue
+#define BGCOLOR GColorBlack
+#define FGCOLOR GColorWhite
 
 #define KEY_WEATHER_TYPE 0
 #define WEATHER_CODE_KEY 1
@@ -43,7 +49,7 @@ static Layer *simple_bg_layer, *current_weather_layer, *weather_layer, *forecast
              *forecast_weather_indicator_up_layer, *forecast_weather_indicator_down_layer;
 
 static TextLayer *city_textlayer, *icon_textlayer, *temperature_textlayer, *description_textlayer,
-                 *hourly_time_textlayer[27], *hourly_icon_textlayer[27], *hourly_temperature_textlayer[27],
+                 *hourly_time_textlayer[11], *hourly_icon_textlayer[11], *hourly_temperature_textlayer[11],
                  *daily_time_textlayer[6], *daily_icon_textlayer[6], *daily_temperature_textlayer[6],
                  *daily_night_temperature_textlayer[6], *title_anim1_textlayer, *icon_anim1_textlayer, 
                  *icon_anim2_textlayer, *city_menu_mainheader_textlayer;
@@ -407,7 +413,7 @@ static void startup_window_load(Window *window) {
   
   title_anim1_textlayer = text_layer_create(GRect(0, bounds.size.h / 2 - 50, bounds.size.w, 30));
   text_layer_set_font(title_anim1_textlayer, font_roboto_light_18);
-  text_layer_set_text_color(title_anim1_textlayer, GColorWhite);
+  text_layer_set_text_color(title_anim1_textlayer, FGCOLOR);
   text_layer_set_background_color(title_anim1_textlayer, GColorClear);
   text_layer_set_text_alignment(title_anim1_textlayer, GTextAlignmentCenter);
   text_layer_set_text(title_anim1_textlayer, "Rain or Shine");
@@ -415,7 +421,7 @@ static void startup_window_load(Window *window) {
   
   icon_anim1_textlayer = text_layer_create(GRect(0, bounds.size.h / 2 - 10, 210, 40));
   text_layer_set_font(icon_anim1_textlayer, font_weather_icons_30);
-  text_layer_set_text_color(icon_anim1_textlayer, GColorWhite);
+  text_layer_set_text_color(icon_anim1_textlayer, FGCOLOR);
   text_layer_set_background_color(icon_anim1_textlayer, GColorClear);
   text_layer_set_text(icon_anim1_textlayer, icons);
   layer_add_child(window_layer, text_layer_get_layer(icon_anim1_textlayer));
@@ -424,7 +430,7 @@ static void startup_window_load(Window *window) {
   
   icon_anim2_textlayer = text_layer_create(GRect(anim1_frame.size.w, bounds.size.h / 2 - 10, anim1_frame.size.w, 40));
   text_layer_set_font(icon_anim2_textlayer, font_weather_icons_30);
-  text_layer_set_text_color(icon_anim2_textlayer, GColorWhite);
+  text_layer_set_text_color(icon_anim2_textlayer, FGCOLOR);
   text_layer_set_background_color(icon_anim2_textlayer, GColorClear);
   text_layer_set_text(icon_anim2_textlayer, icons);
   layer_add_child(window_layer, text_layer_get_layer(icon_anim2_textlayer));
@@ -451,11 +457,11 @@ if ( current_weather[app_settings.current_city].timestamp > 0 ||
 
 static void show_startup_animation() {
   startup_window = window_create();
-//  window_set_window_handlers(startup_window, (WindowHandlers) {
-//    .load = startup_window_load,
-//    .unload = startup_window_unload,
-//  });
-  window_set_background_color(startup_window, GColorCobaltBlue);
+  //window_set_window_handlers(startup_window, (WindowHandlers) {
+  //  .load = startup_window_load,
+  //  .unload = startup_window_unload,
+  //});
+  window_set_background_color(startup_window, BGCOLOR);
   window_stack_push(startup_window, true);
   
   startup_animation_start_timestamp = time(NULL);
@@ -503,7 +509,7 @@ static void read_weather() {
 
 static void log_hourly_weather(uint8_t item) {
   APP_LOG(APP_LOG_LEVEL_DEBUG, "log_hourly_weather(): city = %u, timestamp = %u", (int) current_hourly[item].city_id, (int) current_hourly[item].timestamp);
-  for(uint8_t i=0; i < 30; i++) {
+  for(uint8_t i=0; i < 10; i++) {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "log_hourly_weather(): ts = %u, code = %u, temperature = %u", 
             (int) current_hourly[item].items[i].timestamp, (int) current_hourly[item].items[i].code, 
             (int) current_hourly[item].items[i].temperature);
@@ -816,7 +822,7 @@ void get_weather_icon(uint16_t code, time_t timestamp, char* ascii, int buffersi
 }
 
 static void bg_update_proc(Layer *layer, GContext *ctx) {
-  graphics_context_set_fill_color(ctx, GColorCobaltBlue);
+  graphics_context_set_fill_color(ctx, BGCOLOR);
   graphics_fill_rect(ctx, layer_get_bounds(layer), 0, GCornerNone);
 }
 
@@ -849,7 +855,7 @@ static void current_weather_update_proc(Layer *layer, GContext *ctx) {
   
   if ( timestamp == 0 && current_hourly[item].timestamp != 0 ) {
     timestamp = current_hourly[item].timestamp;
-    for(int i=0; i < 30; i++) {
+    for(int i=0; i < 10; i++) {
       if ( current_hourly[item].items[i].timestamp >= now && current_hourly[item].items[i].timestamp <= now + 3600 ) {
         temperature = current_hourly[item].items[i].temperature;
         code = current_hourly[item].items[i].code;
@@ -859,6 +865,7 @@ static void current_weather_update_proc(Layer *layer, GContext *ctx) {
   }
   
   if ( timestamp > 0 ) {
+    
     text_layer_set_text(city_textlayer, current_weather[item].city);
     //GSize size = text_layer_get_content_size(city_textlayer);
     //GRect bounds = layer_get_bounds(city_layer);
@@ -875,6 +882,13 @@ static void current_weather_update_proc(Layer *layer, GContext *ctx) {
     text_layer_set_text(temperature_textlayer, temperature_text);
 
     text_layer_set_text(description_textlayer, description);
+    
+    #ifdef SCREENSHOT 
+    text_layer_set_text(city_textlayer, "New York");
+    text_layer_set_text(icon_textlayer, "\U0000f00d"); 
+    text_layer_set_text(temperature_textlayer, "72°");
+    text_layer_set_text(description_textlayer, "clear sky");
+    #endif
     
     GSize citytext_size = text_layer_get_content_size(city_textlayer);
     GSize descriptiontext_size = text_layer_get_content_size(description_textlayer);
@@ -900,11 +914,11 @@ static void current_weather_update_proc(Layer *layer, GContext *ctx) {
       sunset = sunset + ( 24 * 60 * 60 );
     }
         
-    static char text[27][32];
-    static char temperature_per_hour[27][8];
-    static char icon[27][16];
+    static char text[11][32];
+    static char temperature_per_hour[11][8];
+    static char icon[11][16];
     uint8_t line = 0;
-    for(int i=0; i < 30; i++) {
+    for(int i=0; i < 9; i++) {
 
       timestamp = 0;
       if ( current_hourly[item].items[i].timestamp ) {
@@ -920,7 +934,7 @@ static void current_weather_update_proc(Layer *layer, GContext *ctx) {
         time_t sunrise2 = sunrise + current_hourly[item].utcoffset;
         t_sunrise = gmtime(&sunrise2);
       }
-      if ( timestamp - sunrise > 0 && timestamp - sunrise < 3600 ) {
+      if ( timestamp - sunrise > 0 && timestamp - sunrise < 10800 ) {
       
         if ( clock_is_24h_style() ) {
           strftime(text[line], sizeof(text[line]), "%k:%M", t_sunrise);
@@ -942,7 +956,7 @@ static void current_weather_update_proc(Layer *layer, GContext *ctx) {
         t_sunset = gmtime(&sunset2);
       }
       
-      if (  timestamp - sunset > 0 && timestamp - sunset < 3600 ) {
+      if (  timestamp - sunset > 0 && timestamp - sunset < 10800 ) {
         
         if ( clock_is_24h_style() ) {
           strftime(text[line], sizeof(text[line]), "%k:%M", t_sunset);
@@ -995,20 +1009,25 @@ static void current_weather_update_proc(Layer *layer, GContext *ctx) {
         snprintf(temperature_per_hour[line], sizeof(temperature_per_hour[line]), "%d°", convert_temp(current_hourly[item].items[i].temperature));
         text_layer_set_text(hourly_temperature_textlayer[line], temperature_per_hour[line]);
         
+        #ifdef SCREENSHOT 
+        text_layer_set_text(hourly_icon_textlayer[line], "\U0000f00d");
+        text_layer_set_text(hourly_temperature_textlayer[line], "72°");
+        #endif
+        
         line++;
-        if ( line > 26 ) {
+        if ( line > 10 ) {
           break;
         }
 
       } else {
         if ( timestamp == 0 ) {
-          if ( line < 27 ) {
+          if ( line < 11 ) {
             text_layer_set_text(hourly_time_textlayer[line], "- -");
             text_layer_set_text(hourly_temperature_textlayer[line], "- -");
           }
           
           line++;
-          if ( line > 26 ) {
+          if ( line > 10 ) {
             break;
           }
         }
@@ -1025,14 +1044,14 @@ static void current_weather_update_proc(Layer *layer, GContext *ctx) {
 
     text_layer_set_text(description_textlayer, "- - - - -");
     
-    for(int i=0; i < 24; i++) {
+    for(int i=0; i < 10; i++) {
       text_layer_set_text(hourly_time_textlayer[i], "- -");
       text_layer_set_text(hourly_temperature_textlayer[i], "- -");
     }
   }
   
   #if defined(PBL_ROUND)
-  graphics_context_set_fill_color(ctx, GColorWhite);
+  graphics_context_set_fill_color(ctx, FGCOLOR);
   graphics_fill_circle(ctx, GPoint(180,90), 12);
   #endif
 }
@@ -1205,8 +1224,8 @@ static void forecast_window_load(Window *window) {
     .times_out = false,
     .alignment = GAlignCenter,
     .colors = {
-      .foreground = GColorWhite,
-      .background = GColorCobaltBlue
+      .foreground = FGCOLOR,
+      .background = BGCOLOR
     }
   };
   content_indicator_configure_direction(forecast_weather_indicator, ContentIndicatorDirectionUp, 
@@ -1217,8 +1236,8 @@ static void forecast_window_load(Window *window) {
     .times_out = false,
     .alignment = GAlignCenter,
     .colors = {
-      .foreground = GColorWhite,
-      .background = GColorCobaltBlue
+      .foreground = FGCOLOR,
+      .background = BGCOLOR
     }
   };
   content_indicator_configure_direction(forecast_weather_indicator, ContentIndicatorDirectionDown, 
@@ -1239,7 +1258,7 @@ static void forecast_window_load(Window *window) {
 #else
     text_layer_set_font(daily_time_textlayer[i], font_roboto_light_18);
 #endif
-    text_layer_set_text_color(daily_time_textlayer[i], GColorWhite);
+    text_layer_set_text_color(daily_time_textlayer[i], FGCOLOR);
     text_layer_set_background_color(daily_time_textlayer[i], GColorClear);
     text_layer_set_text_alignment(daily_time_textlayer[i], GTextAlignmentRight);
     scroll_layer_add_child(forecast_weather_scrolllayer, text_layer_get_layer(daily_time_textlayer[i]));
@@ -1250,7 +1269,7 @@ static void forecast_window_load(Window *window) {
 #else
     text_layer_set_font(daily_icon_textlayer[i], font_weather_icons_18);
 #endif    
-    text_layer_set_text_color(daily_icon_textlayer[i], GColorWhite);
+    text_layer_set_text_color(daily_icon_textlayer[i], FGCOLOR);
     text_layer_set_background_color(daily_icon_textlayer[i], GColorClear);
     text_layer_set_text_alignment(daily_icon_textlayer[i], GTextAlignmentLeft);
     scroll_layer_add_child(forecast_weather_scrolllayer, text_layer_get_layer(daily_icon_textlayer[i]));  
@@ -1261,7 +1280,7 @@ static void forecast_window_load(Window *window) {
 #else
     text_layer_set_font(daily_temperature_textlayer[i], font_roboto_regular_18);
 #endif
-    text_layer_set_text_color(daily_temperature_textlayer[i], GColorWhite);
+    text_layer_set_text_color(daily_temperature_textlayer[i], FGCOLOR);
     text_layer_set_background_color(daily_temperature_textlayer[i], GColorClear);
     text_layer_set_text_alignment(daily_temperature_textlayer[i], GTextAlignmentLeft);
     scroll_layer_add_child(forecast_weather_scrolllayer, text_layer_get_layer(daily_temperature_textlayer[i]));  
@@ -1272,7 +1291,7 @@ static void forecast_window_load(Window *window) {
 #else
     text_layer_set_font(daily_night_temperature_textlayer[i], font_roboto_light_18);
 #endif
-    text_layer_set_text_color(daily_night_temperature_textlayer[i], GColorWhite);
+    text_layer_set_text_color(daily_night_temperature_textlayer[i], FGCOLOR);
     text_layer_set_background_color(daily_night_temperature_textlayer[i], GColorClear);
     text_layer_set_text_alignment(daily_night_temperature_textlayer[i], GTextAlignmentLeft);
     scroll_layer_add_child(forecast_weather_scrolllayer, text_layer_get_layer(daily_night_temperature_textlayer[i]));
@@ -1309,7 +1328,7 @@ static void show_forecast() {
     .load = forecast_window_load,
     .unload = forecast_window_unload,
   });
-  window_set_background_color(forecast_window, GColorCobaltBlue);
+  window_set_background_color(forecast_window, BGCOLOR);
   window_stack_push(forecast_window, true);
 }
 
@@ -1546,8 +1565,8 @@ static void city_window_load(Window *window) {
   menu_layer_set_click_config_onto_window(city_menulayer, window);
   menu_layer_set_selected_index(city_menulayer, MenuIndex(0,1), MenuRowAlignCenter, false);
   
-  menu_layer_set_normal_colors(city_menulayer, GColorCobaltBlue, GColorWhite);
-  menu_layer_set_highlight_colors(city_menulayer, GColorWhite, GColorCobaltBlue);
+  menu_layer_set_normal_colors(city_menulayer, BGCOLOR, FGCOLOR);
+  menu_layer_set_highlight_colors(city_menulayer, FGCOLOR, BGCOLOR);
 
   layer_add_child(window_layer, menu_layer_get_layer(city_menulayer));
   
@@ -1572,7 +1591,7 @@ static void show_city_search(char *city) {
     .unload = city_window_unload,
   });
   window_set_user_data(city_window, city);
-  window_set_background_color(city_window, GColorCobaltBlue);
+  window_set_background_color(city_window, BGCOLOR);
   window_stack_push(city_window, true);
 }
 
@@ -1731,8 +1750,8 @@ static void menu_window_load(Window *window) {
     menu_layer_set_selected_index(action_menulayer, MenuIndex(0,2), MenuRowAlignCenter, false);    
   }
   
-  menu_layer_set_normal_colors(action_menulayer, GColorCobaltBlue, GColorWhite);
-  menu_layer_set_highlight_colors(action_menulayer, GColorWhite, GColorCobaltBlue);
+  menu_layer_set_normal_colors(action_menulayer, BGCOLOR, FGCOLOR);
+  menu_layer_set_highlight_colors(action_menulayer, FGCOLOR, BGCOLOR);
 
   layer_add_child(window_layer, menu_layer_get_layer(action_menulayer));
 
@@ -1754,7 +1773,7 @@ static void launch_menu() {
     .load = menu_window_load,
     .unload = menu_window_unload,
   });
-  window_set_background_color(menu_window, GColorCobaltBlue);
+  window_set_background_color(menu_window, BGCOLOR);
   window_stack_push(menu_window, true);
 }
 
@@ -1800,8 +1819,8 @@ static void main_window_load(Window *window) {
     .times_out = false,
     .alignment = GAlignCenter,
     .colors = {
-      .foreground = GColorWhite,
-      .background = GColorCobaltBlue
+      .foreground = FGCOLOR,
+      .background = BGCOLOR
     }
   };
   content_indicator_configure_direction(current_weather_indicator, ContentIndicatorDirectionUp, 
@@ -1812,8 +1831,8 @@ static void main_window_load(Window *window) {
     .times_out = false,
     .alignment = GAlignCenter,
     .colors = {
-      .foreground = GColorWhite,
-      .background = GColorCobaltBlue
+      .foreground = FGCOLOR,
+      .background = BGCOLOR
     }
   };
   content_indicator_configure_direction(current_weather_indicator, ContentIndicatorDirectionDown, 
@@ -1826,7 +1845,7 @@ static void main_window_load(Window *window) {
 #endif
   
   text_layer_set_font(city_textlayer, font_roboto_regular_18);
-  text_layer_set_text_color(city_textlayer, GColorWhite);
+  text_layer_set_text_color(city_textlayer, FGCOLOR);
   text_layer_set_background_color(city_textlayer, GColorClear);
   text_layer_set_text_alignment(city_textlayer, GTextAlignmentCenter);
   scroll_layer_add_child(current_weather_scrolllayer, text_layer_get_layer(city_textlayer));
@@ -1837,7 +1856,7 @@ static void main_window_load(Window *window) {
   //icon_textlayer = text_layer_create(GRect(bounds.size.w / 2 - 55, bounds.size.h / 2 - 12, 50, 50));
   icon_textlayer = text_layer_create(GRect(bounds.size.w / 2 - 55, 4, 50, 50));
   text_layer_set_font(icon_textlayer, font_weather_icons_30);
-  text_layer_set_text_color(icon_textlayer, GColorWhite);
+  text_layer_set_text_color(icon_textlayer, FGCOLOR);
   text_layer_set_background_color(icon_textlayer, GColorClear);
   text_layer_set_text_alignment(icon_textlayer, GTextAlignmentRight);
   layer_add_child(weather_layer, text_layer_get_layer(icon_textlayer));
@@ -1845,21 +1864,21 @@ static void main_window_load(Window *window) {
   //temperature_textlayer = text_layer_create(GRect(bounds.size.w / 2 + 5,  bounds.size.h / 2 - 16, 90, 50));
   temperature_textlayer = text_layer_create(GRect(bounds.size.w / 2 + 5,  0, 90, 50));
   text_layer_set_font(temperature_textlayer, font_roboto_light_36);
-  text_layer_set_text_color(temperature_textlayer, GColorWhite);
+  text_layer_set_text_color(temperature_textlayer, FGCOLOR);
   text_layer_set_background_color(temperature_textlayer, GColorClear);
   text_layer_set_text_alignment(temperature_textlayer, GTextAlignmentLeft);
   layer_add_child(weather_layer, text_layer_get_layer(temperature_textlayer));
   
   description_textlayer = text_layer_create(GRect(15,  bounds.size.h / 2 + 30, bounds.size.w - 30, 50));
   text_layer_set_font(description_textlayer, font_roboto_light_18);
-  text_layer_set_text_color(description_textlayer, GColorWhite);
+  text_layer_set_text_color(description_textlayer, FGCOLOR);
   text_layer_set_background_color(description_textlayer, GColorClear);
   text_layer_set_text_alignment(description_textlayer, GTextAlignmentCenter);
 //  text_layer_set_overflow_mode(description_textlayer, GTextOverflowModeWordWrap);
   scroll_layer_add_child(current_weather_scrolllayer, text_layer_get_layer(description_textlayer));
   
   int line;
-  for(int i=0; i<27; i++) {
+  for(int i=0; i < 11; i++) {
 
 #if defined(PBL_RECT)  
     line = bounds.size.h * 1.5 + ( i * 35 ) - 10;
@@ -1873,7 +1892,7 @@ static void main_window_load(Window *window) {
 #else
     text_layer_set_font(hourly_time_textlayer[i], font_roboto_light_18);
 #endif
-    text_layer_set_text_color(hourly_time_textlayer[i], GColorWhite);
+    text_layer_set_text_color(hourly_time_textlayer[i], FGCOLOR);
     text_layer_set_background_color(hourly_time_textlayer[i], GColorClear);
     text_layer_set_text_alignment(hourly_time_textlayer[i], GTextAlignmentRight);
     scroll_layer_add_child(current_weather_scrolllayer, text_layer_get_layer(hourly_time_textlayer[i]));
@@ -1884,7 +1903,7 @@ static void main_window_load(Window *window) {
 #else
     text_layer_set_font(hourly_icon_textlayer[i], font_weather_icons_18);
 #endif
-    text_layer_set_text_color(hourly_icon_textlayer[i], GColorWhite);
+    text_layer_set_text_color(hourly_icon_textlayer[i], FGCOLOR);
     text_layer_set_background_color(hourly_icon_textlayer[i], GColorClear);
     text_layer_set_text_alignment(hourly_icon_textlayer[i], GTextAlignmentCenter);
     scroll_layer_add_child(current_weather_scrolllayer, text_layer_get_layer(hourly_icon_textlayer[i]));  
@@ -1895,7 +1914,7 @@ static void main_window_load(Window *window) {
 #else
     text_layer_set_font(hourly_temperature_textlayer[i], font_roboto_light_18);
 #endif
-    text_layer_set_text_color(hourly_temperature_textlayer[i], GColorWhite);
+    text_layer_set_text_color(hourly_temperature_textlayer[i], FGCOLOR);
     text_layer_set_background_color(hourly_temperature_textlayer[i], GColorClear);
     text_layer_set_text_alignment(hourly_temperature_textlayer[i], GTextAlignmentLeft);
     scroll_layer_add_child(current_weather_scrolllayer, text_layer_get_layer(hourly_temperature_textlayer[i]));  
@@ -1915,7 +1934,7 @@ static void main_window_unload(Window *window) {
   
   bitmap_layer_destroy(spinner_bitmaplayer);
   
-  for(int i=0; i<27; i++) {
+  for(int i=0; i < 10; i++) {
     text_layer_destroy(hourly_temperature_textlayer[i]);
     text_layer_destroy(hourly_time_textlayer[i]);
     text_layer_destroy(hourly_icon_textlayer[i]);
@@ -2021,7 +2040,7 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
       APP_LOG(APP_LOG_LEVEL_DEBUG, "inbox_received_handler(): UTC offset %ld for city %lu", current_hourly[item].utcoffset, current_hourly[item].city_id);
       
       uint8_t cnt = 0;
-      for(uint8_t i = 100; i < 190; i=i+3) {
+      for(uint8_t i = 100; i < 127; i=i+3) {
         Tuple *h_timestamp = dict_find(iter, i);
         if ( h_timestamp ) {
           current_hourly[item].items[cnt].timestamp = h_timestamp->value->uint32;
