@@ -3,8 +3,8 @@
 
 //#define SCREENSHOT 1
 
-//#undef APP_LOG
-//#define APP_LOG(...)
+#undef APP_LOG
+#define APP_LOG(...)
 
 //#define BGCOLOR GColorCobaltBlue
 #define BGCOLOR GColorBlack
@@ -44,7 +44,8 @@ static TextLayer *city_textlayer, *icon_textlayer, *temperature_textlayer, *desc
 static ScrollLayer *current_weather_scrolllayer, *forecast_weather_scrolllayer;
 
 static GFont font_roboto_light_18, font_roboto_regular_18, font_roboto_light_36, font_weather_icons_18,
-             font_weather_icons_30, font_roboto_light_14, font_roboto_regular_14, font_weather_icons_14;
+             font_weather_icons_30, font_roboto_light_14, font_roboto_regular_14, font_weather_icons_14,
+             font_roboto_light_24, font_roboto_regular_24;
 
 static ContentIndicator *current_weather_indicator, *forecast_weather_indicator ;
 
@@ -1233,14 +1234,14 @@ static void forecast_window_load(Window *window) {
   int line;
   for(int i=0; i<6; i++) {
 
-#if defined(PBL_RECT)  
+#if PBL_DISPLAY_HEIGHT == 168
     line = bounds.size.h * 0.5 + ( i * 35 ) - 15;
 #else
     line = bounds.size.h * 0.5 + ( i * 42 ) - 15;
 #endif
     
     daily_time_textlayer[i] = text_layer_create(GRect(0, line, bounds.size.w / 2 - 25, 30));
-#if defined(PBL_RECT)
+#if PBL_DISPLAY_HEIGHT == 168
     text_layer_set_font(daily_time_textlayer[i], font_roboto_light_14);
 #else
     text_layer_set_font(daily_time_textlayer[i], font_roboto_light_18);
@@ -1251,7 +1252,7 @@ static void forecast_window_load(Window *window) {
     scroll_layer_add_child(forecast_weather_scrolllayer, text_layer_get_layer(daily_time_textlayer[i]));
     
     daily_icon_textlayer[i] = text_layer_create(GRect(bounds.size.w / 2 - 15, line, bounds.size.w, 30));
-#if defined(PBL_RECT)
+#if PBL_DISPLAY_HEIGHT == 168
     text_layer_set_font(daily_icon_textlayer[i], font_weather_icons_14);
 #else
     text_layer_set_font(daily_icon_textlayer[i], font_weather_icons_18);
@@ -1262,7 +1263,7 @@ static void forecast_window_load(Window *window) {
     scroll_layer_add_child(forecast_weather_scrolllayer, text_layer_get_layer(daily_icon_textlayer[i]));  
     
     daily_temperature_textlayer[i] = text_layer_create(GRect(bounds.size.w / 2 + 17, line, bounds.size.w, 30));
-#if defined(PBL_RECT)
+#if PBL_DISPLAY_HEIGHT == 168
     text_layer_set_font(daily_temperature_textlayer[i], font_roboto_regular_14);
 #else
     text_layer_set_font(daily_temperature_textlayer[i], font_roboto_regular_18);
@@ -1273,7 +1274,7 @@ static void forecast_window_load(Window *window) {
     scroll_layer_add_child(forecast_weather_scrolllayer, text_layer_get_layer(daily_temperature_textlayer[i]));  
     
     daily_night_temperature_textlayer[i] = text_layer_create(GRect(bounds.size.w / 2 + 45, line, bounds.size.w, 30));
-#if defined(PBL_RECT)
+#if PBL_DISPLAY_HEIGHT == 168
     text_layer_set_font(daily_night_temperature_textlayer[i], font_roboto_light_14);
 #else
     text_layer_set_font(daily_night_temperature_textlayer[i], font_roboto_light_18);
@@ -1830,8 +1831,12 @@ static void main_window_load(Window *window) {
 #else
   city_textlayer = text_layer_create(GRect(0, 30, bounds.size.w, 40));
 #endif
-  
+
+#if PBL_DISPLAY_HEIGHT == 228
+  text_layer_set_font(city_textlayer, font_roboto_regular_24);
+#else
   text_layer_set_font(city_textlayer, font_roboto_regular_18);
+#endif
   text_layer_set_text_color(city_textlayer, FGCOLOR);
   text_layer_set_background_color(city_textlayer, GColorClear);
   text_layer_set_text_alignment(city_textlayer, GTextAlignmentCenter);
@@ -1857,7 +1862,11 @@ static void main_window_load(Window *window) {
   layer_add_child(weather_layer, text_layer_get_layer(temperature_textlayer));
   
   description_textlayer = text_layer_create(GRect(15,  bounds.size.h / 2 + 30, bounds.size.w - 30, 50));
+#if PBL_DISPLAY_HEIGHT == 228
+  text_layer_set_font(description_textlayer, font_roboto_light_24);  
+#else
   text_layer_set_font(description_textlayer, font_roboto_light_18);
+#endif
   text_layer_set_text_color(description_textlayer, FGCOLOR);
   text_layer_set_background_color(description_textlayer, GColorClear);
   text_layer_set_text_alignment(description_textlayer, GTextAlignmentCenter);
@@ -1867,14 +1876,14 @@ static void main_window_load(Window *window) {
   int line;
   for(int i=0; i < 11; i++) {
 
-#if defined(PBL_RECT)  
+#if PBL_DISPLAY_HEIGHT == 168
     line = bounds.size.h * 1.5 + ( i * 35 ) - 10;
 #else
     line = bounds.size.h * 1.5 + ( i * 42 ) - 10;
 #endif
     
     hourly_time_textlayer[i] = text_layer_create(GRect(0, line, bounds.size.w / 2 - 15, 30));
-#if defined(PBL_RECT)  
+#if PBL_DISPLAY_HEIGHT == 168
     text_layer_set_font(hourly_time_textlayer[i], font_roboto_light_14);
 #else
     text_layer_set_font(hourly_time_textlayer[i], font_roboto_light_18);
@@ -1885,7 +1894,7 @@ static void main_window_load(Window *window) {
     scroll_layer_add_child(current_weather_scrolllayer, text_layer_get_layer(hourly_time_textlayer[i]));
     
     hourly_icon_textlayer[i] = text_layer_create(GRect(bounds.size.w / 2 - 10, line, 25, 30));
-#if defined(PBL_RECT)  
+#if PBL_DISPLAY_HEIGHT == 168
     text_layer_set_font(hourly_icon_textlayer[i], font_weather_icons_14);
 #else
     text_layer_set_font(hourly_icon_textlayer[i], font_weather_icons_18);
@@ -1896,7 +1905,7 @@ static void main_window_load(Window *window) {
     scroll_layer_add_child(current_weather_scrolllayer, text_layer_get_layer(hourly_icon_textlayer[i]));  
     
     hourly_temperature_textlayer[i] = text_layer_create(GRect(bounds.size.w / 2 + 20, line, bounds.size.w, 30));
-#if defined(PBL_RECT)  
+#if PBL_DISPLAY_HEIGHT == 168
     text_layer_set_font(hourly_temperature_textlayer[i], font_roboto_light_14);
 #else
     text_layer_set_font(hourly_temperature_textlayer[i], font_roboto_light_18);
@@ -2212,14 +2221,19 @@ void handle_init(void) {
   font_roboto_light_18 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_LIGHT_18));
   font_roboto_regular_18 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_REGULAR_18));  
   
-#if defined(PBL_RECT)  
+#if PBL_DISPLAY_HEIGHT == 168
   font_roboto_light_14 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_LIGHT_14));
   font_roboto_regular_14 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_REGULAR_14));
   font_weather_icons_14 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_WEATHERICONS_14));
 #else
   font_weather_icons_18 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_WEATHERICONS_18));
 #endif
-
+  
+#if PBL_DISPLAY_HEIGHT == 228
+  font_roboto_light_24 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_LIGHT_24));
+  font_roboto_regular_24 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_REGULAR_24));
+#endif
+  
   main_window = window_create();
   window_set_window_handlers(main_window, (WindowHandlers) {
     .load = main_window_load,
@@ -2246,7 +2260,7 @@ void handle_deinit(void) {
   fonts_unload_custom_font(font_roboto_light_18);
   fonts_unload_custom_font(font_roboto_regular_18);
 
-#if defined(PBL_RECT)  
+#if PBL_DISPLAY_HEIGHT == 168
   fonts_unload_custom_font(font_roboto_light_14);
   fonts_unload_custom_font(font_roboto_regular_14);
   fonts_unload_custom_font(font_weather_icons_14);

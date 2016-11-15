@@ -1,5 +1,5 @@
-//var console = {};
-//console.log = function(){};
+var console = {};
+console.log = function(){};
 
 var MessageQueue = require('message-queue-pebble');
 //var moment = require('moment');

@@ -31,6 +31,53 @@
         "resources": {
             "media": [
                 {
+                    "characterRegex": "[A-Za-z0-9\\-\\:]",
+                    "file": "fonts/FONT_ROBOTO_REGULAR_18.ttf",
+                    "name": "FONT_ROBOTO_REGULAR_18",
+                    "targetPlatforms": [
+                        "basalt",
+                        "chalk",
+                        "emery"
+                    ],
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[\\-0-9\u00b0]",
+                    "file": "fonts/FONT_ROBOTO_LIGHT_36.ttf",
+                    "name": "FONT_ROBOTO_LIGHT_36",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[A-Za-z0-9\\-\\:]",
+                    "file": "fonts/FONT_ROBOTO_LIGHT_18.ttf",
+                    "name": "FONT_ROBOTO_LIGHT_18",
+                    "targetPlatforms": [
+                        "basalt",
+                        "chalk",
+                        "emery"
+                    ],
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[A-Za-z0-9\\-\\:]",
+                    "file": "fonts/Roboto-Regular.ttf",
+                    "name": "FONT_ROBOTO_REGULAR_24",
+                    "targetPlatforms": [
+                        "emery"
+                    ],
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[A-Za-z0-9\\-\\:]",
+                    "file": "fonts/FONT_ROBOTO_LIGHT_24.ttf",
+                    "name": "FONT_ROBOTO_LIGHT_24",
+                    "targetPlatforms": [
+                        "emery"
+                    ],
+                    "type": "font"
+                },
+                {
                     "file": "images/icon.png",
                     "menuIcon": true,
                     "name": "ICON",
@@ -41,8 +88,7 @@
                     "file": "fonts/FONT_WEATHERICONS_14.ttf",
                     "name": "FONT_WEATHERICONS_14",
                     "targetPlatforms": [
-                        "basalt",
-                        "emery"
+                        "basalt"
                     ],
                     "type": "font"
                 },
@@ -51,8 +97,7 @@
                     "file": "fonts/FONT_ROBOTO_LIGHT_14.ttf",
                     "name": "FONT_ROBOTO_LIGHT_14",
                     "targetPlatforms": [
-                        "basalt",
-                        "emery"
+                        "basalt"
                     ],
                     "type": "font"
                 },
@@ -61,8 +106,7 @@
                     "file": "fonts/FONT_ROBOTO_REGULAR_14.ttf",
                     "name": "FONT_ROBOTO_REGULAR_14",
                     "targetPlatforms": [
-                        "basalt",
-                        "emery"
+                        "basalt"
                     ],
                     "type": "font"
                 },
@@ -84,31 +128,6 @@
                 {
                     "file": "fonts/weathericons-regular-webfont-36.ttf",
                     "name": "FONT_WEATHERICONS_30",
-                    "targetPlatforms": [
-                        "basalt",
-                        "chalk",
-                        "emery"
-                    ],
-                    "type": "font"
-                },
-                {
-                    "characterRegex": "[\\-0-9\u00b0]",
-                    "file": "fonts/Roboto-Ligtht-36.ttf",
-                    "name": "FONT_ROBOTO_LIGHT_36",
-                    "targetPlatforms": null,
-                    "type": "font"
-                },
-                {
-                    "characterRegex": "[A-Za-z0-9\\-\\:]",
-                    "file": "fonts/Roboto-Regular-18.ttf",
-                    "name": "FONT_ROBOTO_REGULAR_18",
-                    "targetPlatforms": null,
-                    "type": "font"
-                },
-                {
-                    "characterRegex": "[A-Za-z0-9\\-\\:]",
-                    "file": "fonts/Roboto-Light-18.ttf",
-                    "name": "FONT_ROBOTO_LIGHT_18",
                     "targetPlatforms": [
                         "basalt",
                         "chalk",
