@@ -2271,11 +2271,12 @@ void handle_deinit(void) {
   window_destroy(main_window);
   window_destroy(menu_window);
   window_destroy(city_window);
-  window_destroy(forecast_window);
+  window_destroy(forecast_window);  
 }
 
 int main(void) {
   handle_init();
   app_event_loop();
   handle_deinit();
+  exit_reason_set(APP_EXIT_ACTION_PERFORMED_SUCCESSFULLY);
 }
