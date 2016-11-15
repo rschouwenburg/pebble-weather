@@ -1,0 +1,152 @@
+{
+    "author": "robert@schouwenburg.com",
+    "dependencies": {
+        "message-queue-pebble": "^1.0.0",
+        "moment": "^2.15.1",
+        "moment-timezone": "^0.5.6"
+    },
+    "keywords": [],
+    "name": "weather",
+    "pebble": {
+        "capabilities": [
+            "location"
+        ],
+        "displayName": "Weather",
+        "enableMultiJS": true,
+        "messageKeys": [
+            "WEATHER_TYPE",
+            "WEATHER_CODE",
+            "WEATHER_TEMPERATURE",
+            "WEATHER_SUNRISE",
+            "WEATHER_SUNSET",
+            "WEATHER_CITY",
+            "WEATHER_TIMESTAMP",
+            "READY",
+            "WEATHER_DESCRIPTION",
+            "WEATHER_CITYCODE",
+            "WEATHER_CURRENT_LOCATION",
+            "UTC_OFFSET"
+        ],
+        "projectType": "native",
+        "resources": {
+            "media": [
+                {
+                    "characterRegex": "[A-Za-z0-9\\-\\:]",
+                    "file": "fonts/FONT_ROBOTO_REGULAR_18.ttf",
+                    "name": "FONT_ROBOTO_REGULAR_18",
+                    "targetPlatforms": [
+                        "basalt",
+                        "chalk",
+                        "emery"
+                    ],
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[\\-0-9\u00b0]",
+                    "file": "fonts/FONT_ROBOTO_LIGHT_36.ttf",
+                    "name": "FONT_ROBOTO_LIGHT_36",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[A-Za-z0-9\\-\\:]",
+                    "file": "fonts/FONT_ROBOTO_LIGHT_18.ttf",
+                    "name": "FONT_ROBOTO_LIGHT_18",
+                    "targetPlatforms": [
+                        "basalt",
+                        "chalk",
+                        "emery"
+                    ],
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[A-Za-z0-9\\-\\:]",
+                    "file": "fonts/Roboto-Regular.ttf",
+                    "name": "FONT_ROBOTO_REGULAR_24",
+                    "targetPlatforms": [
+                        "emery"
+                    ],
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[A-Za-z0-9\\-\\:]",
+                    "file": "fonts/FONT_ROBOTO_LIGHT_24.ttf",
+                    "name": "FONT_ROBOTO_LIGHT_24",
+                    "targetPlatforms": [
+                        "emery"
+                    ],
+                    "type": "font"
+                },
+                {
+                    "file": "images/icon.png",
+                    "menuIcon": true,
+                    "name": "ICON",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "fonts/FONT_WEATHERICONS_14.ttf",
+                    "name": "FONT_WEATHERICONS_14",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[A-Za-z0-9\\-\\:]",
+                    "file": "fonts/FONT_ROBOTO_LIGHT_14.ttf",
+                    "name": "FONT_ROBOTO_LIGHT_14",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[\\-0-9\u00b0]",
+                    "file": "fonts/FONT_ROBOTO_REGULAR_14.ttf",
+                    "name": "FONT_ROBOTO_REGULAR_14",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "font"
+                },
+                {
+                    "file": "data/loading-spinner-12x12.png",
+                    "name": "LOADING_SPINNER_12",
+                    "targetPlatforms": null,
+                    "type": "raw"
+                },
+                {
+                    "file": "fonts/weathericons-regular-webfont-18.ttf",
+                    "name": "FONT_WEATHERICONS_18",
+                    "targetPlatforms": [
+                        "chalk",
+                        "emery"
+                    ],
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/weathericons-regular-webfont-36.ttf",
+                    "name": "FONT_WEATHERICONS_30",
+                    "targetPlatforms": [
+                        "basalt",
+                        "chalk",
+                        "emery"
+                    ],
+                    "type": "font"
+                }
+            ]
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "basalt",
+            "chalk",
+            "emery"
+        ],
+        "uuid": "5d155700-7b49-4060-88c0-24c547d44990",
+        "watchapp": {
+            "watchface": false
+        }
+    },
+    "version": "1.7.0"
+}
